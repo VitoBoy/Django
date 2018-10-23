@@ -1,0 +1,102 @@
+1.Django是一个开放源代码的web应用框架，由python写成，采用了MVC的框架模式，即模型M,视图V和控制器C。
+2.MVC:一种软件设计典范，用一种业务逻辑、数据、界面显示分离的方法组织代码。
+3.Model:是应用程序中用于处理程序数据逻辑的部分
+	通常模型对象负责在数据库中取数据
+  View:是应用程序中处理数据显示的部分
+       通常视图是依据模型数据创建的
+  Controller:是应用程序中处理用户交互的部分
+             通常控制器负责从视图读取数据，控制用户输入，并向模型发送数据
+# MVC的优点
+降低各功能之间的耦合性，方便变更，更容易重构代码，控制用户输入，并向模型发送数据
+
+# python版本3.6+django 1.11
+
+
+#创建环境
+纯净的虚拟环境:virtualenv --no-site-packages name
+
+如果有多个python版本,python2.7 python3.6:
+virtualenv --no-site-packages -p 
+D:\xxx\python3.6.exe name(指定虚拟环境的python版本)
+
+#创建项目
+进入你存放代码的文件夹，在虚拟环境下用命令django-admin startproject 项目名 -- 创建项目
+		day01工程目录文件夹,__init__.py、settings.py(更改配置)、urls.py、wsgi.py
+		manage.py:工具集管理入口(一个命令行工具，可以使我们用多种方式对Django项目进行交互)
+
+
+#启动
+	IP:0.0.0.0     PORT:80
+            python manage.py runserver IP:PORT (修改IP)
+	    python manage.py runserver PORT (修改端口)
+
+
+#访问管理后台 admin
+	
+	http://127.0.0.1:80000/admin/
+
+
+# 修改数据库配置settings.py
+	ENGINE:把dbsqlite3改成mysql、USER:'root'、PASSWORD:创建的数据库密码、HOST:主机名、	PORT:3306、NAME:创建的数据库名称
+
+
+
+# 映射模型到数据库中
+
+	python manage.py migrate
+
+# 安装数据库驱动
+
+	pip install pymysql
+
+# 初始化数据库的驱动__init__.py
+	
+	import pymysql
+	pymysql.install_as_mysqldb()
+
+# 创建超级管理员命令
+
+	python manage.py createsuperuser
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

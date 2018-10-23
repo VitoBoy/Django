@@ -1,0 +1,104 @@
+#创建应用
+在pycharm的terminal中输入python manage.py startapp 应用名 
+
+
+#创建好应用之后工程下面会有你创建的应用，并且有如下文件
+__init__.py,admin.py,apps.py,models.py,tests.py,views.py
+
+
+#在models中创建学生类的字段
+from django.db import models
+
+class Student(models.Model):
+    # 定义s_name字段,varchar类型，最长不超过6字符，唯一
+    s_name = models.CharField(max_length=6, unique=True)
+    # 定义s_age字段, int类型
+    s_age = models.IntegerField(default=18)
+    # 定义s_gender字段，int类型
+    s_gender = models.BooleanField(default=1)
+    # 定义create_time字段，创建时间
+    create_time = models.DateTimeField(auto_now_add=True, null=True)
+    # 定义operate_time字段，修改时间
+    operate_time = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        # 定义模型迁移到数据库中的表名
+        db_table = 'student'
+		
+		
+#在views.py中创建学生的信息
+from app.models import  Student
+
+def hello(request):
+    return HttpResponse('你好,千锋')
+
+
+def create_stu(request):
+    # 创建学生
+    # stu = Student()
+    # stu.s_name = '小李'
+    # stu.s_age = 20
+    # 保存到数据库
+    # stu.save()
+    # 第二种方式:
+    # Student.objects.create(s_name='猪八戒')
+    Student.objects.create(s_name='孙悟空')
+    Student.objects.create(s_name='唐僧')
+    Student.objects.create(s_name='白骨精')
+    Student.objects.create(s_name='牛魔王')
+    Student.objects.create(s_name='阿克')
+    Student.objects.create(s_name='亚瑟')
+    Student.objects.create(s_name='柳岩')
+    Student.objects.create(s_name='杨幂')
+
+    return HttpResponse('创建成功')
+
+
+def sel_stu(request):
+    # 实现查询
+    # all()查询所有对象信息
+    stus = Student.objects.all()
+    # filter() 过滤
+    stus = Student.objects.filter(s_name='猪八戒')
+    # first() 获取第一个
+    # last() 获取最后一个
+    stus = Student.objects.filter(s_age=20).first()
+    # get() 获取对象，容易出错
+    # stus = Student.objects.get(s_age=20)
+    # 查询年龄等于20，性别是女的学生信息
+    stus = Student.objects.filter(s_age=20).filter(s_gender=0)
+    stus = Student.objects.filter(s_age=20, s_gender=0)
+
+    # 模糊查询 like '%xxx%(s_name__contains) or xx%'
+    stus = Student.objects.filter(s_name__contains='八')
+    stus = Student.objects.filter(s_name__startswith='孙')
+    stus = Student.objects.filter(s_name__endswith='岩')
+
+    # 大于(gt)    小于(lt)   大于等于(gte)  小于等于(lte)
+    stus = Student.objects.filter(s_age__gt=18)
+
+    # 排序 order_by()
+    # 升序
+    stus = Student.objects.order_by('id')
+    # 降序
+    stus = Student.objects.order_by('-id')
+
+    # 查询不满足条件的数据 exclude()
+    stus = Student.objects.exclude(s_age=18)
+
+    # 计算统计的个数: count()
+    stus_count = stus.count()
+
+    # values()
+    stus_values = stus.values()
+
+    # id=pk
+    stus = Student.objects.filter(id=4)
+    stus = Student.objects.filter(pk=4)
+    print(stus_count)
+    stu_names = [stu.s_name for stu in stus]
+    print(stu_names)
+    return HttpResponse('查询成功')
+
+#使用python manage.py makemigration 生成迁移文件
+#使用python manage.py migrate 讲迁移文件迁移到数据库中
