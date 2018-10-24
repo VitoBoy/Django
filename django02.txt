@@ -1,0 +1,152 @@
+from django.db.models import Q,F
+# 或条件
+#Q()
+stus = Student.objects.filter(Q(s_age=20)| Q( s_gender=0))
+# 且条件 |
+stus = Student.objects.filter(Q(s_age=20) & Q(s_gender=0
+# 非条件 ~
+stus = Student.objects.filter(~Q(s_age=20))
+
+# 查询语文成绩比数学成绩大十分的学生成绩
+stus = Student.objects.filter(chinese__gt=F('math') + 10)
+
+stu_names = [stu.s_name for stu in stus]
+print(stu_names)
+return HttpResponse('查询成功')
+
+
+
+#实现删除
+首先在urls.py模块中创建一个url
+urlpatterns = [
+    # 127.0.0.1:8080/admin/
+    url(r'^admin/', admin.site.urls),
+    # 127.0..0.1:8080/hello/
+    url(r'^hello/',views.hello),
+    url(r'^create_stu/',views.create_stu),
+    url(r'^sel_stu/',views.sel_stu),
+    url(r'^del_stu/',views.del_stu),
+]
+然后在views.py模块中创建一个删除学生功能的函数
+def del_stu(request):
+    # 实现删除
+    Student.objects.filter(s_name='猪八戒').delete()
+    return HttpResponse('删除成功')
+
+	
+# 实现删除
+def update_stu(request):
+    实现更新
+    stu = Student.objects.filter(s_name='孙悟空').first()
+    stu.s_name = '猴哥'
+    stu.save()
+    # 第二种
+    Student.objects.filter(s_name='猴哥').update(s_name='齐天大圣')
+    return HttpResponse('修改成功')
+
+	
+# 获取所有学生的信息
+首先在day02工程目录下创建一个templates文件夹，在templates文件夹下创建info.html,stus.html文件
+(1)info.html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Title</title>
+	</head>
+	<body>
+	<form action="" method="post">
+		电话号码:<input type="text" name="phone">
+		地址:<input type="text" name="adress">
+		<input type="submit" value="提交">
+	</form>
+	</body>
+	</html>
+(2)stus.html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Title</title>
+	</head>
+	<body>
+	<table>
+		<thead>
+			<th>姓名</th>
+			<th>年龄</th>
+			<th>操作</th>
+		</thead>
+		<tbody>
+			{% for stu in students %}
+				<tr>
+					<td>{{ stu.s_name}}</td>
+					<td>{{ stu.s_age}}</td>
+					<td>
+						<a href="/add_info/?stu_id={{ stu.id }}">添加拓展信息</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</body>
+	</html>
+#定义一个能查找学生功能的函数
+def all_stu(request):
+    # 获取所有学生信息
+    stus = Student.objects.all()
+    # 返回页面
+    return render(request, 'stus.html', {'students':stus})
+
+#创建一个拓展学生信息的表StudentInfo，表里面有phone字段和address字段
+def add_info(request):
+    # method 获取请求HTTP方式
+    if request.method == 'GET':
+        return render(request, 'info.html')
+    if request.method == 'POST':
+        # 获取页面中提交的手机号和地址,并保存
+        phone = request.POST.get('phone')
+        adress = request.POST.get('adress')
+        stu_id = request.GET.get('stu_id')
+        # 保存
+        StudentInfo.objects.create(phone=phone,
+                                   address=adress,
+                                   stu_id=stu_id
+                                    )
+        return HttpResponse('创建扩展表信息成功')
+		
+		
+
+#两种 HTTP 请求方法：GET 和 POST
+在客户机和服务器之间进行请求-响应时，两种最常被用到的方法是：GET 和 POST。
+1.GET - 从指定的资源请求数据。
+2.POST - 向指定的资源提交要被处理的数据
+
+
+#关联关系
+(1)一对一:OneToOneField
+	class A:
+		id = xxx
+		b = OneToOneField
+	xlass B:
+		id = xxx
+	已知a对象,查找b对象:a.b
+	已知b对象,查找a对象:b.a
+	
+(2)一对多:ForeignKey
+
+	class A:
+		id = xxx
+		b = ForeignKey(B)
+		
+	class B:
+		id = xxx
+	
+	已知a对象,查找b对象:a.b
+	已知b对象,查找a对象:b.a_set
+
+
+
+
+
+
+
