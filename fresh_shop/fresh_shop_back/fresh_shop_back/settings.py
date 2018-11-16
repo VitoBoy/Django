@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'fresh_shop_back.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'freshdb6',
+        'NAME': 'shop',
         'USER': 'root',
         'PASSWORD': '123456',
         'HOST': '127.0.0.1',
